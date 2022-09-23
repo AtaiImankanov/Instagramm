@@ -12,17 +12,74 @@
 
    <div>
 
-       <label asp-for="Email"></label><br />
+      <strong><label asp-for="UserName">Login</label></strong></><br />
+
+       <input asp-for="UserName" />
+
+       <span asp-validation-for="UserName"></span>
+
+   </div>
+
+    <div>
+
+       <strong><label asp-for="Avatar"></label></strong><br />
+
+       <input asp-for="Avatar" />
+
+       <span asp-validation-for="Avatar"></span>
+
+   </div>
+
+
+
+   <div>
+
+       <strong><label asp-for="Email"></label></strong><br />
 
        <input asp-for="Email" />
 
        <span asp-validation-for="Email"></span>
 
    </div>
+     <div>
 
+       <label asp-for="FullName"></label><br />
+
+       <input asp-for="FullName" />
+
+       <span asp-validation-for="FullName"></span>
+
+   </div>
+     <div>
+
+       <label asp-for="InfoUser"></label><br />
+
+       <input asp-for="InfoUser" />
+
+       <span asp-validation-for="InfoUser"></span>
+
+   </div>
+        <div>
+
+       <label asp-for="PhoneNumber"></label><br />
+
+       <input asp-for="PhoneNumber" />
+
+       <span asp-validation-for="PhoneNumber"></span>
+
+   </div>
+      <div>
+
+       <label asp-for="Sex"></label><br />
+
+       <input asp-for="Sex" />
+
+       <span asp-validation-for="Sex"></span>
+
+   </div>
    <div>
 
-       <label asp-for="Password"></label><br />
+       <strong><label asp-for="Password"></label></strong><br />
 
        <input asp-for="Password" />
 
@@ -32,14 +89,13 @@
 
    <div>
 
-       <label asp-for="ConfirmPassword"></label><br />
+       <strong><label asp-for="ConfirmPassword"></label></strong><br />
 
        <input asp-for="ConfirmPassword" />
 
        <span asp-validation-for="ConfirmPassword"></span>
 
    </div>
-
    <div>
 
        <input type="submit" value="Регистрация" />

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
-namespace lavAspMvclast.Controllers
+namespace LabInsta.Controllers
 {
     public class AccountController : Controller
     {
@@ -41,14 +41,19 @@ namespace lavAspMvclast.Controllers
             if (ModelState.IsValid)
 
             {
-                
 
                 User user = new User
                 {
+                    AmountOfPosts = 0,
+                    Subscribers=0,
+                    Follows=0,
                     Email = model.Email,
-
-                    UserName = model.Email,
-
+                    UserName = model.UserName,
+                    PhoneNumber = model.PhoneNumber,
+                    FullName = model.FullName,
+                    Avatar=model.Avatar,
+                    Sex = model.Sex,
+                    InfoUser=model.InfoUser
                 };
 
                 var result = await _userManager.CreateAsync(user, model.Password);
@@ -66,7 +71,7 @@ namespace lavAspMvclast.Controllers
                     await _signInManager.SignInAsync(user, false);
                     
 
-                    return RedirectToAction("Index", "ToDoTasks");
+                    return RedirectToAction("Index", "Home");
 
                 }
 
@@ -131,7 +136,7 @@ namespace lavAspMvclast.Controllers
 
 
 
-                    return RedirectToAction("Index", "ToDoTasks");
+                    return RedirectToAction("Index", "Home");
 
                 }
 
@@ -155,7 +160,7 @@ namespace lavAspMvclast.Controllers
 
             await _signInManager.SignOutAsync();
 
-            return RedirectToAction("Home", "ToDoTasks");
+            return RedirectToAction("Index", "Home");
 
         }
     }

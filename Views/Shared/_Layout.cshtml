@@ -24,6 +24,36 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                         <li class="nav-item">
+                        
+
+   @if(User.Identity.IsAuthenticated)
+
+   {
+
+       <p>@User.Identity.Name</p>
+
+   
+
+       <form method="post" asp-controller="Account" asp-action="LogOff">
+
+           <input type="submit" value="Выход" />
+
+       </form>
+
+   }
+
+   else
+
+   {
+
+       <a asp-controller="Account" asp-action="Login">Вход</a>
+
+       <a asp-controller="Account" asp-action="Register">Регистрация</a>
+
+   }
+
+</li>
                     </ul>
                 </div>
             </div>
@@ -37,9 +67,10 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2022 - LabInsta - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            New Post
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

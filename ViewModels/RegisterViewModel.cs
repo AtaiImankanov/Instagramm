@@ -8,8 +8,19 @@ namespace LabInsta.ViewModels
 
             [Required]
             [EmailAddress]
-            [Display(Name = "Name")]
+            [Display(Name = "Email")]
             public string Email { get; set; }
+            public string FullName { get; set; }
+            [Required]
+            public string UserName { get; set; }
+        [Required]
+        public string Avatar { get; set; }
+            
+            public string InfoUser { get; set; }
+            
+            public string PhoneNumber { get; set; }
+            
+            public string Sex { get; set; }
             [Required]
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
