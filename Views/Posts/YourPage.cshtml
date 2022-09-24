@@ -1,5 +1,55 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model LabInsta.ViewModels.YourPageViewModel
+
 @{
+    ViewData["Title"] = "YourPage";
 }
+
+
+<a class="nav-link text-dark" asp-area="" asp-controller="Posts" asp-action="Create">Create Post</a>
+ 
+<div><p>@Model.User.UserName</p></div>
+<div><p>@Model.User.FullName</p></div>
+<div><p>@Model.User.AmountOfPosts  |  @Model.User.Subscribers  |   @Model.User.Follows </p></div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+               Pic
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                AmountOfLikes
+            </th>
+            <th>
+               AmountOfComments
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Posts) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Pic)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AmountOfLikes)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AmountOfComments)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

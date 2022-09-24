@@ -29,11 +29,29 @@ namespace LabInsta.Controllers
             int idUser = Convert.ToInt32(_userManager.GetUserId(currentUser));
             var user = _userManager.Users.FirstOrDefault(x => x.Id == idUser);
             List<Post> postsModel= new List<Post>();
-            List<User> followsUser= new List<User>();
-
+            foreach(var u in _context.FollowsModels)
+            {
+                if(u.FollowerId == idUser)
+                {
+                  foreach(var post in _context.Post)
+                    {
+                        if(post.UserId == _userManager.Users.FirstOrDefault(x => x.Id == u.FollowsId).Id)
+                        {
+                            postsModel.Add(post);
+                        }
+                    } 
+                }
+            }
+            foreach(var post in _context.Post)
+            {
+                if (post.UserId == idUser)
+                {
+                    postsModel.Add(post);
+                }
+            }
             FeedViewModel model = new FeedViewModel
             {
-              
+              Posts= postsModel
             };
             var instaContext = _context.Post.Include(p => p.User);
             return View(await instaContext.ToListAsync());
@@ -74,9 +92,13 @@ namespace LabInsta.Controllers
         {
             if (ModelState.IsValid)
             {
+                System.Security.Claims.ClaimsPrincipal currentUser = this.User;
+                int idUser = Convert.ToInt32(_userManager.GetUserId(currentUser));
+                var user = _userManager.Users.FirstOrDefault(x => x.Id == idUser);
                 post.AmountOfComments = 0;
                 post.AmountOfLikes = 0;
                 post.TimeCreated= DateTime.Now;
+                post.UsersLogin = user.UserName;
                 _context.Add(post);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -170,6 +192,39 @@ namespace LabInsta.Controllers
         private bool PostExists(int id)
         {
             return _context.Post.Any(e => e.Id == id);
+        }
+
+        [HttpGet]
+        public IActionResult Follow(int id,int follower, int follows)
+        {
+            FollowsModel fm = new FollowsModel();
+            fm.FollowsId = follows;
+            fm.FollowerId = follower;
+            _context.FollowsModels.Add(fm);
+            _context.SaveChanges();
+            return RedirectToAction("YourPage","Post");
+
+        }
+        [HttpGet]
+        public IActionResult YourPage()
+        {
+            System.Security.Claims.ClaimsPrincipal currentUser = this.User;
+            int idUser = Convert.ToInt32(_userManager.GetUserId(currentUser));
+            var user = _userManager.Users.FirstOrDefault(x => x.Id == idUser);
+            List<Post> posts = new List<Post>();
+            foreach(var p in _context.Post)
+            {
+                if (p.UserId == idUser)
+                {
+                    posts.Add(p);
+                }
+            }
+            YourPageViewModel yourPageViewModel = new YourPageViewModel
+            {
+                Posts = posts,
+                User = user
+            };
+            return View(yourPageViewModel);
         }
     }
 }

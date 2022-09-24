@@ -94,8 +94,6 @@ namespace LabInsta.Controllers
 
         }
 
-
-
         [HttpPost]
 
         [ValidateAntiForgeryToken]
