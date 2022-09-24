@@ -7,5 +7,6 @@ namespace LabInsta.ViewModels
     {
         public List<Post> Posts { get; set; }
         public User User { get; set; }
+        
     }
 }

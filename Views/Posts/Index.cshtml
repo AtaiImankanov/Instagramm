@@ -4,12 +4,11 @@
 @{
     ViewData["Title"] = "Index";
 }
-
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<form method="get">
+<label class="control-label"> Search users </label>   
+    @Html.TextBox("LoginName",Model.LoginName,htmlAttributes:new{@class="form-control"})
+    <input type="submit" value="filter" class="btn btn-outline-danger" />
+    </form>
 <table class="table">
     <thead>
         <tr>
@@ -28,6 +27,7 @@
             <th>
                 User
             </th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -46,7 +46,11 @@
                 @Html.DisplayFor(modelItem => item.AmountOfComments)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.UsersLogin)
+                @Html.DisplayFor(modelItem => item.User.UserName)
+            </td>
+            <td>
+                <a asp-action="Like" asp-controller="Posts" asp-route-id="@item.Id">Like</a> |
+                <a asp-action="Comment" asp-controller="Posts" asp-route-id="@item.Id">Comment</a> 
             </td>
         </tr>
 }

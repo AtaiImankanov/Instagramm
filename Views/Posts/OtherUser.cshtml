@@ -1,0 +1,12 @@
+﻿@model LabInsta.ViewModels.YourPageViewModel
+
+@Model.User.UserName 
+
+@foreach(var p in Model.Posts)
+{
+    <div><p>@p.Description</p></div>
+    <p>@p.AmountOfComments</p>
+    <p>@p.AmountOfLikes</p>
+}
+
+ 

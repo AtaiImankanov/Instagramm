@@ -15,6 +15,5 @@ namespace LabInsta.Models
         
         public int UserId { get; set; }
         public User User { get; set; }
-        public string UsersLogin { get; set; }
     }
 }

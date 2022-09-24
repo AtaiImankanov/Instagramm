@@ -23,8 +23,12 @@ namespace LabInsta.Controllers
         }
 
         // GET: Posts
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string LoginName)
         {
+            if (LoginName != null)
+            {
+                return RedirectToAction("SearchByLogin",new {login=LoginName});
+            }
             System.Security.Claims.ClaimsPrincipal currentUser = this.User;
             int idUser = Convert.ToInt32(_userManager.GetUserId(currentUser));
             var user = _userManager.Users.FirstOrDefault(x => x.Id == idUser);
@@ -53,8 +57,7 @@ namespace LabInsta.Controllers
             {
               Posts= postsModel
             };
-            var instaContext = _context.Post.Include(p => p.User);
-            return View(await instaContext.ToListAsync());
+            return View(model);
         }
 
         // GET: Posts/Details/5
@@ -98,7 +101,7 @@ namespace LabInsta.Controllers
                 post.AmountOfComments = 0;
                 post.AmountOfLikes = 0;
                 post.TimeCreated= DateTime.Now;
-                post.UsersLogin = user.UserName;
+                post.UserId=idUser; 
                 _context.Add(post);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -225,6 +228,45 @@ namespace LabInsta.Controllers
                 User = user
             };
             return View(yourPageViewModel);
+        }
+        [HttpGet]
+        public IActionResult Like(int id)
+        {
+            var post = _context.Post.FirstOrDefault(x => x.Id == id);
+            post.AmountOfLikes++;
+            _context.Update(post);
+             _context.SaveChanges();
+            return RedirectToAction("Index", "Posts");
+
+        }
+        [HttpGet]
+        public IActionResult Comment(int id)
+        {
+          var post = _context.Post.FirstOrDefault(x => x.Id == id);
+          
+            return RedirectToAction("Index", "Posts");
+
+        }
+        [HttpGet]
+        public IActionResult SearchByLogin(string login)
+        {
+            IQueryable<User> users = _context.Users;
+            users = users.Where(t => t.UserName.Contains(login));
+            return View(users);
+
+        }
+        [HttpGet]
+        public IActionResult OtherUser(int id)
+        {
+            IQueryable<User> users = _context.Users;
+           var user = users.FirstOrDefault(t => t.Id==id);
+            var posts= _context.Post.Where(p=> p.UserId==user.Id).ToList();
+            YourPageViewModel model = new YourPageViewModel
+            {
+                User = user,
+                Posts = posts
+            };
+            return View(model);
         }
     }
 }

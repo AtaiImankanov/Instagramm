@@ -1,0 +1,6 @@
+﻿@model IEnumerable<LabInsta.Models.User>
+
+
+@foreach (var item in Model) {
+    <a asp-action="OtherUser" asp-controller="Posts" asp-route-id="@item.Id">@item.UserName</a>
+}

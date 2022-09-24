@@ -6,5 +6,6 @@ namespace LabInsta.ViewModels
     public class FeedViewModel
     {
         public List<Post> Posts { get; set; }
+        public string LoginName { get; set; }
     }
 }
