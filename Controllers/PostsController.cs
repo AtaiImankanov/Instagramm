@@ -27,21 +27,21 @@ namespace LabInsta.Controllers
         {
             if (LoginName != null)
             {
-                return RedirectToAction("SearchByLogin",new {login=LoginName});
+                return  RedirectToAction("SearchByLogin",new {login=LoginName});
             }
             System.Security.Claims.ClaimsPrincipal currentUser = this.User;
             int idUser = Convert.ToInt32(_userManager.GetUserId(currentUser));
             var user = _userManager.Users.FirstOrDefault(x => x.Id == idUser);
             List<Post> postsModel= new List<Post>();
-            foreach(var u in _context.FollowsModels)
+            foreach(var u in _context.FollowsModels.ToList())
             {
                 if(u.FollowerId == idUser)
                 {
-                  foreach(var post in _context.Post)
+                  foreach(var post in _context.Post.ToList())
                     {
                         if(post.UserId == _userManager.Users.FirstOrDefault(x => x.Id == u.FollowsId).Id)
                         {
-                            postsModel.Add(post);
+                              postsModel.Add(post);
                         }
                     } 
                 }
@@ -57,7 +57,7 @@ namespace LabInsta.Controllers
             {
               Posts= postsModel
             };
-            return View(model);
+            return  View(model);
         }
 
         // GET: Posts/Details/5
@@ -198,15 +198,27 @@ namespace LabInsta.Controllers
         }
 
         [HttpGet]
-        public IActionResult Follow(int id,int follower, int follows)
+        public IActionResult Follow(int id)
         {
+            System.Security.Claims.ClaimsPrincipal currentUser = this.User;
+            int idUser = Convert.ToInt32(_userManager.GetUserId(currentUser));          
+            var userfollows = _context.Users.FirstOrDefault(u => u.Id == id);
+            var userfollower = _userManager.Users.FirstOrDefault(x => x.Id == idUser);
+            foreach(var follow in _context.FollowsModels.ToList())
+            {
+                if(follow.FollowerId==userfollower.Id && follow.FollowsId == userfollows.Id)
+                {
+                    return Redirect($"https://localhost:44348/Posts/OtherUser/{userfollows.Id}");
+                }
+            }
             FollowsModel fm = new FollowsModel();
-            fm.FollowsId = follows;
-            fm.FollowerId = follower;
+            userfollows.Subscribers++;
+            userfollower.Follows++;
+            fm.FollowsId = userfollows.Id;
+            fm.FollowerId = userfollower.Id;
             _context.FollowsModels.Add(fm);
             _context.SaveChanges();
-            return RedirectToAction("YourPage","Post");
-
+            return Redirect($"https://localhost:44348/Posts/OtherUser/{userfollows.Id}");
         }
         [HttpGet]
         public IActionResult YourPage()
@@ -232,27 +244,67 @@ namespace LabInsta.Controllers
         [HttpGet]
         public IActionResult Like(int id)
         {
+            System.Security.Claims.ClaimsPrincipal currentUser = this.User;
+            int idUser = Convert.ToInt32(_userManager.GetUserId(currentUser));
+            var Liker = _userManager.Users.FirstOrDefault(x => x.Id == idUser);
             var post = _context.Post.FirstOrDefault(x => x.Id == id);
+
+            foreach (var item in _context.LikesModels.ToList())
+            {
+                if (item.LikerId==Liker.Id && item.PostId==post.Id)
+                {
+                    return RedirectToAction("Index", "Posts");
+                }
+            }
+            LikesModel lm = new LikesModel();
             post.AmountOfLikes++;
             _context.Update(post);
-             _context.SaveChanges();
+            lm.PostId = post.Id;
+            lm.LikerId = Liker.Id;
+            _context.LikesModels.Add(lm);
+            _context.SaveChanges();
             return RedirectToAction("Index", "Posts");
 
         }
-        [HttpGet]
-        public IActionResult Comment(int id)
+        public IActionResult CommentPost(int id)
         {
-          var post = _context.Post.FirstOrDefault(x => x.Id == id);
-          
-            return RedirectToAction("Index", "Posts");
-
+            ViewBag.PostId = id;
+            var post = _context.Post.FirstOrDefault(x => x.Id == id);
+            List<Comment> coms= (_context.Comments.Where(x => x.PostId == id)).ToList();
+            PostNCommentsViewModel pcm = new PostNCommentsViewModel()
+            {
+                Post = post,
+                Comments = coms
+            };
+            return View(pcm);
         }
         [HttpGet]
         public IActionResult SearchByLogin(string login)
         {
             IQueryable<User> users = _context.Users;
-            users = users.Where(t => t.UserName.Contains(login));
-            return View(users);
+            List<User> usersmodel= new List<User>();
+            foreach(var u in users)
+            {
+                if (u.UserName.Contains(login) || u.Email.Contains(login))
+                {
+                    usersmodel.Add(u);
+                }
+                if(u.InfoUser != null)
+                {
+                    if (u.InfoUser.Contains(login))
+                    {
+                        usersmodel.Add(u);
+                    }
+                }
+                if (u.FullName != null)
+                {
+                    if (u.FullName.Contains(login))
+                    {
+                        usersmodel.Add(u);
+                    }
+                }
+            }
+            return View(usersmodel);
 
         }
         [HttpGet]

@@ -4,6 +4,7 @@ namespace LabInsta.Models
 {
     public class User : IdentityUser<int>
     {
+
         public string Avatar { get; set; }
         public int Subscribers { get; set; }
         public int AmountOfPosts { get; set; }

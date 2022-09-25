@@ -1,9 +1,10 @@
 ﻿@model LabInsta.ViewModels.YourPageViewModel
 
-@Model.User.UserName 
-
+Login @Model.User.UserName 
+<a asp-action="Follow" asp-controller="Posts" asp-route-id="@Model.User.Id">Follow</a>
 @foreach(var p in Model.Posts)
 {
+    <div><p>@p.Description</p></div>
     <div><p>@p.Description</p></div>
     <p>@p.AmountOfComments</p>
     <p>@p.AmountOfLikes</p>

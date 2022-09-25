@@ -1,0 +1,11 @@
+﻿@model LabInsta.ViewModels.PostNCommentsViewModel
+
+@Model.Post.User.UserName 
+@Model.Post.Description
+
+<a asp-action="CommentCreate" asp-controller="Posts" asp-route-id="@Model.Post.Id">add coment</a>
+
+@foreach(var c in @Model.Comments){
+    <div><p>@c.User.UserName;</p></div>
+    <div><p>@c.Descripton</p></div>
+}

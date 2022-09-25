@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LabInsta.Migrations
 {
     [DbContext(typeof(InstaContext))]
-    [Migration("20220924105628_AddedUserLoginPropInPostModel")]
-    partial class AddedUserLoginPropInPostModel
+    [Migration("20220925131933_AddedLikesModelsComm")]
+    partial class AddedLikesModelsComm
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,6 +20,34 @@ namespace LabInsta.Migrations
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
                 .HasAnnotation("ProductVersion", "3.1.28")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
+
+            modelBuilder.Entity("LabInsta.Models.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Descripton")
+                        .HasColumnType("text");
+
+                    b.Property<int>("PostId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PostId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Comments");
+                });
 
             modelBuilder.Entity("LabInsta.Models.FollowsModel", b =>
                 {
@@ -41,6 +69,28 @@ namespace LabInsta.Migrations
                     b.HasIndex("FollowsId");
 
                     b.ToTable("FollowsModels");
+                });
+
+            modelBuilder.Entity("LabInsta.Models.LikesModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<int>("LikerId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PostId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LikerId");
+
+                    b.HasIndex("PostId");
+
+                    b.ToTable("LikesModels");
                 });
 
             modelBuilder.Entity("LabInsta.Models.Post", b =>
@@ -67,9 +117,6 @@ namespace LabInsta.Migrations
 
                     b.Property<int>("UserId")
                         .HasColumnType("integer");
-
-                    b.Property<string>("UsersLogin")
-                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -294,6 +341,21 @@ namespace LabInsta.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("LabInsta.Models.Comment", b =>
+                {
+                    b.HasOne("LabInsta.Models.Post", "Post")
+                        .WithMany()
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LabInsta.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("LabInsta.Models.FollowsModel", b =>
                 {
                     b.HasOne("LabInsta.Models.User", "Follower")
@@ -305,6 +367,21 @@ namespace LabInsta.Migrations
                     b.HasOne("LabInsta.Models.User", "Follows")
                         .WithMany()
                         .HasForeignKey("FollowsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("LabInsta.Models.LikesModel", b =>
+                {
+                    b.HasOne("LabInsta.Models.User", "Liker")
+                        .WithMany()
+                        .HasForeignKey("LikerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LabInsta.Models.Post", "Post")
+                        .WithMany()
+                        .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
