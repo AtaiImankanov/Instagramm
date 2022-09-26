@@ -1,13 +1,32 @@
 ﻿@model LabInsta.ViewModels.YourPageViewModel
+<div class="container">
+    <div>
+<img src="@Model.User.Avatar" style="border-radius:50%;width:45px;height:45px;" alt="pic"> @Model.User.UserName 
+</div>
+<div>
+Name @Model.User.FullName 
+</div>
+<div>
+Info : @Model.User.InfoUser 
+</div>
+<a asp-action="Follow" asp-controller="Posts" asp-route-id="@Model.User.Id"><img src="https://www.clipartmax.com/png/middle/368-3683971_icon-af-follow-icon-af-follow.png" style="width:65px;height:60px;"/></a>
 
-Login @Model.User.UserName 
-<a asp-action="Follow" asp-controller="Posts" asp-route-id="@Model.User.Id">Follow</a>
-@foreach(var p in Model.Posts)
-{
-    <div><p>@p.Description</p></div>
-    <div><p>@p.Description</p></div>
-    <p>@p.AmountOfComments</p>
-    <p>@p.AmountOfLikes</p>
-}
-
+@foreach (var item in Model.Posts)
+    {
+        <div class="card">
+            <div>
+            <img src="@item.User.Avatar" style="border-radius:50%;width:45px;height:45px;" alt="pic"> @item.User.UserName
+            </div>
+         <img src="@item.Pic" class="card-img-top" style="width:600px;height:500px;" alt="pic">
+         <div class="card-body">
+             <div>
+                <p> @item.AmountOfLikes Likes    |    @item.AmountOfComments Comments</p> 
+                 </div>
+             <a asp-action="Like" asp-controller="Posts" asp-route-id="@item.Id"><img src="https://cdn-icons-png.flaticon.com/512/3128/3128313.png" style="width:35px;height:35px;"/></a> 
+                <a asp-action="CommentPost" asp-controller="Posts" asp-route-id="@item.Id"><img src="https://cdn-icons-png.flaticon.com/512/1380/1380338.png" style="width:35px;height:35px;"/></a> 
+         <p class="card-text">@item.Description</p>
+        </div>
+        </div>
+    }
+    </div>
  

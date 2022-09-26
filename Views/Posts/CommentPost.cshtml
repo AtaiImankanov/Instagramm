@@ -1,11 +1,16 @@
 ﻿@model LabInsta.ViewModels.PostNCommentsViewModel
+<div class="container">
+<div><img src="@Model.Post.User.Avatar" style="border-radius:50%;width:45px;height:45px;" @Model.Post.User.UserName</div>
+<div>Post</div>
+<div><img src="@Model.Post.Pic" class="card-img-top" style="width:600px;height:500px;" alt="pic"></div>
+<div>@Model.Post.Description</div>
 
-@Model.Post.User.UserName 
-@Model.Post.Description
 
-<a asp-action="CommentCreate" asp-controller="Posts" asp-route-id="@Model.Post.Id">add coment</a>
+<a asp-action="CommentCreate" asp-controller="Posts" asp-route-id="@Model.Post.Id"><img src="https://cdn-icons-png.flaticon.com/512/1380/1380338.png" style="width:35px;height:35px;"/></a> 
 
 @foreach(var c in @Model.Comments){
-    <div><p>@c.User.UserName;</p></div>
+    <div><img src="@c.User.Avatar" style="border-radius:50%;width:45px;height:45px;" alt="pic">@c.User.UserName</div>
+    <div><p>Comment:</p></div>
     <div><p>@c.Descripton</p></div>
 }
+</div>

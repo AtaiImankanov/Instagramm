@@ -20,6 +20,7 @@ namespace LabInsta.Controllers
         {
             _userManager= userManager;
             _context = context;
+
         }
 
         // GET: Posts
@@ -53,6 +54,7 @@ namespace LabInsta.Controllers
                     postsModel.Add(post);
                 }
             }
+            postsModel.Sort((x, y) => y.TimeCreated.CompareTo(x.TimeCreated));
             FeedViewModel model = new FeedViewModel
             {
               Posts= postsModel
@@ -101,7 +103,7 @@ namespace LabInsta.Controllers
                 post.AmountOfComments = 0;
                 post.AmountOfLikes = 0;
                 post.TimeCreated= DateTime.Now;
-                post.UserId=idUser; 
+                post.UserId=idUser;
                 _context.Add(post);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -268,15 +270,41 @@ namespace LabInsta.Controllers
         }
         public IActionResult CommentPost(int id)
         {
-            ViewBag.PostId = id;
-            var post = _context.Post.FirstOrDefault(x => x.Id == id);
-            List<Comment> coms= (_context.Comments.Where(x => x.PostId == id)).ToList();
+            var post = _context.Post.Include(x=> x.User).FirstOrDefault(x => x.Id == id);
+            List<Comment> coms= (_context.Comments.Where(x => x.PostId == id)).Include(x=> x.User).ToList();
+            
+            coms.Sort((x, y) => y.DateCreated.CompareTo(x.DateCreated));
+
             PostNCommentsViewModel pcm = new PostNCommentsViewModel()
             {
                 Post = post,
                 Comments = coms
             };
             return View(pcm);
+        }
+        [HttpGet]
+        public IActionResult CommentCreate(int id)
+        {
+            ViewData["PostId"] = new SelectList(_context.Post, "Id", "Id");
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewBag.PostId = id;
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CommentCreate([Bind("Descripton,PostId")] Comment comment)
+        {
+            if (ModelState.IsValid)
+            {
+                System.Security.Claims.ClaimsPrincipal currentUser = this.User;              
+                comment.UserId= Convert.ToInt32(_userManager.GetUserId(currentUser));
+                comment.DateCreated = DateTime.Now;
+                _context.Add(comment);
+                await _context.SaveChangesAsync();
+                return Redirect("https://localhost:44348/Posts/CommentPost/"+comment.PostId);
+            }
+            return View(comment);
         }
         [HttpGet]
         public IActionResult SearchByLogin(string login)
@@ -308,7 +336,7 @@ namespace LabInsta.Controllers
 
         }
         [HttpGet]
-        public IActionResult OtherUser(int id)
+        public async Task<IActionResult> OtherUser(int id)
         {
             IQueryable<User> users = _context.Users;
            var user = users.FirstOrDefault(t => t.Id==id);
@@ -320,5 +348,29 @@ namespace LabInsta.Controllers
             };
             return View(model);
         }
+
+        public bool EmailValid(string email)
+        {
+            foreach(var e in _context.Users)
+            {
+                if (e.Email == email)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        public bool UserNameValid(string userName)
+        {
+            foreach (var e in _context.Users)
+            {
+                if (e.UserName == userName)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
+    
 }

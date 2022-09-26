@@ -4,55 +4,37 @@
 @{
     ViewData["Title"] = "Index";
 }
-<form method="get">
-<label class="control-label"> Search users </label>   
-    @Html.TextBox("LoginName",Model.LoginName,htmlAttributes:new{@class="form-control"})
-    <input type="submit" value="filter" class="btn btn-outline-danger" />
+
+<div class = "container">
+@if (User.Identity.IsAuthenticated)
+{
+   
+    <form method="get">
+        <label class="control-label"> Search users </label>   
+        @Html.TextBox("LoginName",Model.LoginName,htmlAttributes:new{@class="form-control"})
+        <input type="submit" value="search" class="btn btn-outline-danger" />
     </form>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-               Pic
-            </th>
-            <th>
-               Description
-            </th>
-            <th>
-               AmountOfLikes
-            </th>
-            <th>
-                AmountOfComments
-            </th>
-            <th>
-                User
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Posts) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Pic)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AmountOfLikes)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AmountOfComments)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.UserName)
-            </td>
-            <td>
-                <a asp-action="Like" asp-controller="Posts" asp-route-id="@item.Id">Like</a> |
-                <a asp-action="CommentPost" asp-controller="Posts" asp-route-id="@item.Id">Comment</a> 
-            </td>
-        </tr>
+
+
+    @foreach (var item in Model.Posts)
+    {
+        <div class="card">
+            <div>
+            <img src="@item.User.Avatar" style="border-radius:50%;width:45px;height:45px;" alt="pic"> @item.User.UserName
+            </div>
+         <img src="@item.Pic" class="card-img-top" style="width:600px;height:500px;" alt="pic">
+         <div class="card-body">
+             <div>
+                <p> @item.AmountOfLikes Likes    |    @item.AmountOfComments Comments</p> 
+                 </div>
+             <a asp-action="Like" asp-controller="Posts" asp-route-id="@item.Id"><img src="https://cdn-icons-png.flaticon.com/512/3128/3128313.png" style="width:35px;height:35px;"/></a> 
+                <a asp-action="CommentPost" asp-controller="Posts" asp-route-id="@item.Id"><img src="https://cdn-icons-png.flaticon.com/512/1380/1380338.png" style="width:35px;height:35px;"/></a> 
+         <p class="card-text">@item.Description</p>
+        </div>
+        </div>
+    }
+
+
 }
-    </tbody>
-</table>
+
+</div>

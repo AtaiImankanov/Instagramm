@@ -8,61 +8,48 @@
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">LabInsta</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <ul class="navbar-nav flex-grow-1">
 
+    <header>
+       
+            <div class="container d-flex justify-content-between">     
+                
                         @if (User.Identity.IsAuthenticated)
                         {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Posts" asp-action="Index">Feed</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Posts" asp-action="YourPage">UrPage</a>
-                            </li>
+                            <div>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Posts" asp-action="Index"><i class="bi bi-instagram"><img src="https://cdn-icons-png.flaticon.com/512/3955/3955024.png" style="width:50px;height:50px;"/></a>
+                            </div>
+                            <div>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Posts" asp-action="YourPage"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" style="width:50px;height:50px;"/></a>
+                             </div>
                         }
 
-                         <li class="nav-item">
+                         
                         
 
    @if(User.Identity.IsAuthenticated)
 
    {
-
-       <p>@User.Identity.Name</p>
-
-   
-
+   <div>
        <form method="post" asp-controller="Account" asp-action="LogOff">
 
            <input type="submit" value="Выход" />
 
        </form>
-
+       </div>
    }
 
    else
 
    {
-
+         <div>
        <a asp-controller="Account" asp-action="Login">Вход</a>
-
+       </div>
+         <div>
        <a asp-controller="Account" asp-action="Register">Регистрация</a>
-
+       </div>
    }
 
-</li>
-                    </ul>
                 </div>
-            </div>
-        </nav>
     </header>
     <div class="container">
         <main role="main" class="pb-3">

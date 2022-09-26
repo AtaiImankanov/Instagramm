@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace LabInsta.ViewModels
 {
@@ -9,10 +10,12 @@ namespace LabInsta.ViewModels
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
-            public string Email { get; set; }
-            public string FullName { get; set; }
+            [Remote(action: "EmailValid", controller: "Posts")]
+        public string Email { get; set; }
+        public string FullName { get; set; }
             [Required]
-            public string UserName { get; set; }
+        [Remote(action: "UserNameValid", controller: "Posts")]
+        public string UserName { get; set; }
         [Required]
         public string Avatar { get; set; }
             

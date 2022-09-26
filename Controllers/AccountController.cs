@@ -71,7 +71,7 @@ namespace LabInsta.Controllers
                     await _signInManager.SignInAsync(user, false);
                     
 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Posts");
 
                 }
 
@@ -95,9 +95,6 @@ namespace LabInsta.Controllers
         }
 
         [HttpPost]
-
-        [ValidateAntiForgeryToken]
-
         public async Task<IActionResult> Login(LoginViewModel model)
 
         {
@@ -134,7 +131,7 @@ namespace LabInsta.Controllers
 
 
 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Posts");
 
                 }
 
@@ -158,7 +155,7 @@ namespace LabInsta.Controllers
 
             await _signInManager.SignOutAsync();
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Posts");
 
         }
     }

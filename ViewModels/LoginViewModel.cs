@@ -8,7 +8,6 @@ namespace LabInsta.ViewModels
         [Required]
 
         [Display(Name = "Email")]
-        [Remote(action: "EmailValid", controller:"ToDoTasks")]
         public string Email { get; set; }
 
 

@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<LabInsta.Models.User>
 
-
+<div class="container">
 @foreach (var item in Model) {
-    <a asp-action="OtherUser" asp-controller="Posts" asp-route-id="@item.Id">@item.UserName</a>
+    <div> <img src="@item.Avatar" style="border-radius:50%;width:45px;height:45px;" alt="pic">  <a asp-action="OtherUser" asp-controller="Posts" asp-route-id="@item.Id">@item.UserName</a></div>
 }
+</div>
